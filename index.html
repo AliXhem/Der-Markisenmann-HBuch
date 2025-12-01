@@ -1,69 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ses Arşivi</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #fafafa;
-            padding: 20px;
-            max-width: 800px;
-            margin: auto;
-        }
-        h1 {
-            text-align: center;
-        }
-        .audio-item {
-            background: white;
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        button {
-            padding: 6px 10px;
-            margin-right: 10px;
-            border: none;
-            background: #444;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #222;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Audio Sammlung</title>
+  <style>
+    body { font-family: Arial; margin: 30px; background:#fafafa;}
+    .audio-box { background:white; padding:15px; margin-bottom:15px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    button { margin:3px; padding:6px 10px; }
+  </style>
 </head>
+
 <body>
+  <h1>Audio Sammlung 🎧</h1>
+  <p>Hier kannst du alle Audiodateien anhören und herunterladen.</p>
 
-    <h1>🎧 Ses Arşivi</h1>
+  <!-- SES 1 -->
+  <div class="audio-box">
+    <h3>Audio 1</h3>
+    <audio id="audio1" controls src="audio/audio1.mp3"></audio><br>
+    <button onclick="rewind('audio1')">⟲ 10s zurück</button>
+    <button onclick="forward('audio1')">10s vor ⟳</button>
+    <a href="audio/audio1.mp3" download><button>⬇ Herunterladen</button></a>
+  </div>
 
-    <!-- ✔️ Buraya her ses dosyası için bir blok ekleyeceksin -->
-    <div class="audio-item">
-        <h3>Ses 1</h3>
-        <audio id="audio1" controls src="ses1.mp3"></audio><br><br>
-        <button onclick="rewind('audio1')">⏪ 10 saniye geri</button>
-        <button onclick="forward('audio1')">⏩ 10 saniye ileri</button>
-    </div>
+  <!-- SES 2 -->
+  <div class="audio-box">
+    <h3>Audio 2</h3>
+    <audio id="audio2" controls src="audio/audio2.mp3"></audio><br>
+    <button onclick="rewind('audio2')">⟲ 10s zurück</button>
+    <button onclick="forward('audio2')">10s vor ⟳</button>
+    <a href="audio/audio2.mp3" download><button>⬇ Herunterladen</button></a>
+  </div>
 
-    <div class="audio-item">
-        <h3>Ses 2</h3>
-        <audio id="audio2" controls src="ses2.mp3"></audio><br><br>
-        <button onclick="rewind('audio2')">⏪ 10 saniye geri</button>
-        <button onclick="forward('audio2')">⏩ 10 saniye ileri</button>
-    </div>
+  <!-- BURAYA İSTER 10, İSTER 50 SES DAHA EKLEYEBİLİRİZ -->
 
-    <script>
-        function rewind(id) {
-            const audio = document.getElementById(id);
-            audio.currentTime -= 10;
-        }
-        function forward(id) {
-            const audio = document.getElementById(id);
-            audio.currentTime += 10;
-        }
-    </script>
-</body>
-</html>
+  <script>
+    function rewind(id) {
+      const audio = document.getElementById(id);
+      audio.currentTime -=
