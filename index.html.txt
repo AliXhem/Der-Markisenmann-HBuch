@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ses Arşivi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #fafafa;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        h1 {
+            text-align: center;
+        }
+        .audio-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            padding: 6px 10px;
+            margin-right: 10px;
+            border: none;
+            background: #444;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #222;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🎧 Ses Arşivi</h1>
+
+    <!-- ✔️ Buraya her ses dosyası için bir blok ekleyeceksin -->
+    <div class="audio-item">
+        <h3>Ses 1</h3>
+        <audio id="audio1" controls src="ses1.mp3"></audio><br><br>
+        <button onclick="rewind('audio1')">⏪ 10 saniye geri</button>
+        <button onclick="forward('audio1')">⏩ 10 saniye ileri</button>
+    </div>
+
+    <div class="audio-item">
+        <h3>Ses 2</h3>
+        <audio id="audio2" controls src="ses2.mp3"></audio><br><br>
+        <button onclick="rewind('audio2')">⏪ 10 saniye geri</button>
+        <button onclick="forward('audio2')">⏩ 10 saniye ileri</button>
+    </div>
+
+    <script>
+        function rewind(id) {
+            const audio = document.getElementById(id);
+            audio.currentTime -= 10;
+        }
+        function forward(id) {
+            const audio = document.getElementById(id);
+            audio.currentTime += 10;
+        }
+    </script>
+</body>
+</html>
