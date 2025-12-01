@@ -5,6 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Audio Sammlung</title>
 
+  <!-- JSZip ve FileSaver -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
   <style>
     body {
       font-family: "Inter", Arial, sans-serif;
@@ -43,10 +47,26 @@
     body.dark #themeToggle {
       background: #1f1f1f;
       color: #eee;
-      box-shadow: 0 2px 8px rgba(255,255,255,0.1);
     }
 
-    /* Modern audio card */
+    #downloadAll {
+      display: block;
+      margin: 20px auto;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      background: #4CAF50;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: background 0.3s;
+    }
+
+    #downloadAll:hover {
+      background: #43a047;
+    }
+
     .audio-box {
       background: #ffffff;
       margin: 15px auto;
@@ -107,6 +127,9 @@
   <h1>Audio Sammlung 🎧</h1>
   <p style="text-align:center;">Hier kannst du alle Audiodateien anhören und herunterladen.</p>
 
+  <!-- Tümünü indir butonu -->
+  <button id="downloadAll">⬇ Alle Audios als ZIP herunterladen</button>
+
   <div id="audioList"></div>
 
   <script>
@@ -118,7 +141,8 @@
       localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
     };
 
-    // Load theme + audios
+    let audioFiles = [];
+
     window.onload = function () {
       if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark");
@@ -132,7 +156,9 @@
       fetch("audio/list.json")
         .then(res => res.json())
         .then(files => {
+          audioFiles = files; // ZIP için kaydet
           let html = "";
+
           files.forEach((name, i) => {
             html += `
               <div class="audio-box">
@@ -147,6 +173,7 @@
               </div>
             `;
           });
+
           document.getElementById("audioList").innerHTML = html;
         });
     }
@@ -158,6 +185,22 @@
     function forward(id) {
       document.getElementById(id).currentTime += 10;
     }
+
+    // ZIP olarak indirme
+    document.getElementById("downloadAll").onclick = async function () {
+      const zip = new JSZip();
+      const folder = zip.folder("audios");
+
+      for (let file of audioFiles) {
+        const url = "audio/" + file;
+        const blob = await fetch(url).then(r => r.blob());
+        folder.file(file, blob);
+      }
+
+      const content = await zip.generateAsync({ type: "blob" });
+      saveAs(content, "alle_audios.zip");
+    };
   </script>
+
 </body>
 </html>
