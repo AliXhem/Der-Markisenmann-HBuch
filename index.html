@@ -4,38 +4,116 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Audio Sammlung</title>
+
   <style>
-    body { font-family: Arial; margin: 30px; background:#fafafa;}
-    .audio-box { background:white; padding:15px; margin-bottom:15px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
-    button { margin:3px; padding:6px 10px; }
+    body { 
+      font-family: Arial; 
+      margin: 30px; 
+      background:#fafafa; 
+      color:#222;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Dark Mode */
+    body.dark {
+      background:#121212;
+      color:#eee;
+    }
+
+    .audio-box { 
+      background:white; 
+      padding:15px; 
+      margin-bottom:15px; 
+      border-radius:10px; 
+      box-shadow:0 2px 6px rgba(0,0,0,0.1); 
+      transition: background 0.3s;
+    }
+
+    body.dark .audio-box {
+      background:#1e1e1e;
+      box-shadow:0 2px 6px rgba(255,255,255,0.1);
+    }
+
+    button { 
+      margin:3px; 
+      padding:6px 10px; 
+      cursor:pointer;
+    }
+
+    /* Sağ üstte dark mode düğmesi */
+    #themeToggle {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      font-size: 18px;
+      padding: 8px 14px;
+      border-radius: 8px;
+    }
   </style>
 </head>
 
 <body>
+
+  <!-- Dark Mode Button -->
+  <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+
   <h1>Audio Sammlung 🎧</h1>
   <p>Hier kannst du alle Audiodateien anhören und herunterladen.</p>
 
-  <!-- SES 1 -->
-  <div class="audio-box">
-    <h3>Audio 1</h3>
-    <audio id="audio1" controls src="audio/audio1.mp3"></audio><br>
-    <button onclick="rewind('audio1')">⟲ 10s zurück</button>
-    <button onclick="forward('audio1')">10s vor ⟳</button>
-    <a href="audio/audio1.mp3" download><button>⬇ Herunterladen</button></a>
-  </div>
-
-  <!-- SES 2 -->
-  <div class="audio-box">
-    <h3>Audio 2</h3>
-    <audio id="audio2" controls src="audio/audio2.mp3"></audio><br>
-    <button onclick="rewind('audio2')">⟲ 10s zurück</button>
-    <button onclick="forward('audio2')">10s vor ⟳</button>
-    <a href="audio/audio2.mp3" download><button>⬇ Herunterladen</button></a>
-  </div>
-
-  <!-- BURAYA İSTER 10, İSTER 50 SES DAHA EKLEYEBİLİRİZ -->
+  <!-- ÖRNEK SESLER (sen 113 tane ekleyebilirsin) -->
+  <div id="audioList"></div>
 
   <script>
+
+    /* --- Dark Mode Sistemi --- */
+    function toggleTheme() {
+      document.body.classList.toggle("dark");
+
+      // Icon değişimi
+      const btn = document.getElementById("themeToggle");
+      btn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+
+      // Kaydet
+      localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
+    }
+
+    // Sayfa açıldığında ayarı yükle
+    window.onload = function() {
+      const savedTheme = localStorage.getItem("theme");
+      if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        document.getElementById("themeToggle").textContent = "☀️";
+      }
+      loadAudios();
+    };
+
+
+    /* --- 113 Ses İçin OTOMATİK LİSTE OLUŞTURMA --- */
+    function loadAudios() {
+      const total = 113;  // kaç ses varsa buraya yaz
+      const container = document.getElementById("audioList");
+
+      for (let i = 1; i <= total; i++) {
+        container.innerHTML += `
+          <div class="audio-box">
+            <h3>Audio ${i}</h3>
+            <audio id="audio${i}" controls src="audio/audio${i}.mp3"></audio><br>
+            <button onclick="rewind('audio${i}')">⟲ 10s zurück</button>
+            <button onclick="forward('audio${i}')">10s vor ⟳</button>
+            <a href="audio/audio${i}.mp3" download><button>⬇ Herunterladen</button></a>
+          </div>
+        `;
+      }
+    }
+
     function rewind(id) {
-      const audio = document.getElementById(id);
-      audio.currentTime -=
+      document.getElementById(id).currentTime -= 10;
+    }
+    function forward(id) {
+      document.getElementById(id).currentTime += 10;
+    }
+
+  </script>
+
+</body>
+</html>
