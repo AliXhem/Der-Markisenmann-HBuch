@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Audio Sammlung</title>
-
   <style>
     body { 
       font-family: Arial; 
@@ -14,10 +13,9 @@
       transition: background 0.3s, color 0.3s;
     }
 
-    /* Dark Mode */
-    body.dark {
-      background:#121212;
-      color:#eee;
+    body.dark { 
+      background:#121212; 
+      color:#eee; 
     }
 
     .audio-box { 
@@ -40,7 +38,6 @@
       cursor:pointer;
     }
 
-    /* Sağ üstte dark mode düğmesi */
     #themeToggle {
       position: fixed;
       top: 15px;
@@ -51,69 +48,64 @@
     }
   </style>
 </head>
-
 <body>
 
   <!-- Dark Mode Button -->
-  <button id="themeToggle" onclick="toggleTheme()">🌙</button>
+  <button id="themeToggle">🌙</button>
 
   <h1>Audio Sammlung 🎧</h1>
   <p>Hier kannst du alle Audiodateien anhören und herunterladen.</p>
 
-  <!-- ÖRNEK SESLER (sen 113 tane ekleyebilirsin) -->
+  <!-- Sesler buraya JS ile eklenecek -->
   <div id="audioList"></div>
 
   <script>
-
-    /* --- Dark Mode Sistemi --- */
-    function toggleTheme() {
+    // Dark Mode Toggle
+    const themeBtn = document.getElementById("themeToggle");
+    themeBtn.onclick = function() {
       document.body.classList.toggle("dark");
-
-      // Icon değişimi
-      const btn = document.getElementById("themeToggle");
-      btn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
-
-      // Kaydet
+      themeBtn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
       localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
-    }
+    };
 
-    // Sayfa açıldığında ayarı yükle
     window.onload = function() {
-      const savedTheme = localStorage.getItem("theme");
-      if (savedTheme === "dark") {
+      if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark");
-        document.getElementById("themeToggle").textContent = "☀️";
+        themeBtn.textContent = "☀️";
       }
       loadAudios();
     };
 
-
-    /* --- 113 Ses İçin OTOMATİK LİSTE OLUŞTURMA --- */
+    // Sesleri yükleme
     function loadAudios() {
-      const total = 113;  // kaç ses varsa buraya yaz
-      const container = document.getElementById("audioList");
-
-      for (let i = 1; i <= total; i++) {
-        container.innerHTML += `
-          <div class="audio-box">
-            <h3>Audio ${i}</h3>
-            <audio id="audio${i}" controls src="audio/audio${i}.mp3"></audio><br>
-            <button onclick="rewind('audio${i}')">⟲ 10s zurück</button>
-            <button onclick="forward('audio${i}')">10s vor ⟳</button>
-            <a href="audio/audio${i}.mp3" download><button>⬇ Herunterladen</button></a>
-          </div>
-        `;
-      }
+      fetch("audio/list.json")
+        .then(res => res.json())
+        .then(files => {
+          let html = "";
+          files.forEach((name, i) => {
+            html += `
+              <div class="audio-box">
+                <h3>${name}</h3>
+                <audio id="audio${i}" controls src="audio/${name}"></audio><br>
+                <button onclick="rewind('audio${i}')">⟲ 10s zurück</button>
+                <button onclick="forward('audio${i}')">10s vor ⟳</button>
+                <a href="audio/${name}" download><button>⬇ Herunterladen</button></a>
+              </div>
+            `;
+          });
+          document.getElementById("audioList").innerHTML = html;
+        });
     }
 
+    // 10 saniye geri
     function rewind(id) {
       document.getElementById(id).currentTime -= 10;
     }
+
+    // 10 saniye ileri
     function forward(id) {
       document.getElementById(id).currentTime += 10;
     }
-
   </script>
-
 </body>
 </html>
