@@ -107,5 +107,33 @@
       document.getElementById(id).currentTime += 10;
     }
   </script>
+fetch("audio/list.json")
+  .then(res => res.json())
+  .then(files => {
+    let html = "";
+    files.forEach((name, i) => {
+      html += `
+        <div class="audio-box">
+          <h3>${name}</h3>
+          <audio id="audio${i}" controls src="audio/${name}"></audio><br>
+          <button onclick="rewind('audio${i}')">⟲ 10s zurück</button>
+          <button onclick="forward('audio${i}')">10s vor ⟳</button>
+          <a href="audio/${name}" download><button>⬇ Herunterladen</button></a>
+        </div>
+      `;
+    });
+    document.getElementById("audioList").innerHTML = html;
+  });
+
+// 10 saniye geri/ileri fonksiyonları
+function rewind(id) {
+  document.getElementById(id).currentTime -= 10;
+}
+function forward(id) {
+  document.getElementById(id).currentTime += 10;
+}
+</script>
+
 </body>
 </html>
+
