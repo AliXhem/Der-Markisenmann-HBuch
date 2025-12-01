@@ -4,71 +4,122 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Audio Sammlung</title>
+
   <style>
-    body { 
-      font-family: Arial; 
-      margin: 30px; 
-      background:#fafafa; 
-      color:#222;
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background: #f4f4f4;
+      color: #222;
       transition: background 0.3s, color 0.3s;
     }
 
-    body.dark { 
-      background:#121212; 
-      color:#eee; 
+    body.dark {
+      background: #121212;
+      color: #eee;
     }
 
-    .audio-box { 
-      background:white; 
-      padding:15px; 
-      margin-bottom:15px; 
-      border-radius:10px; 
-      box-shadow:0 2px 6px rgba(0,0,0,0.1); 
-      transition: background 0.3s;
-    }
-
-    body.dark .audio-box {
-      background:#1e1e1e;
-      box-shadow:0 2px 6px rgba(255,255,255,0.1);
-    }
-
-    button { 
-      margin:3px; 
-      padding:6px 10px; 
-      cursor:pointer;
+    h1 {
+      margin-top: 70px;
+      text-align: center;
+      font-weight: 700;
     }
 
     #themeToggle {
       position: fixed;
       top: 15px;
       right: 15px;
+      padding: 10px 16px;
       font-size: 18px;
+      border: none;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    body.dark #themeToggle {
+      background: #1f1f1f;
+      color: #eee;
+      box-shadow: 0 2px 8px rgba(255,255,255,0.1);
+    }
+
+    /* Modern audio card */
+    .audio-box {
+      background: #ffffff;
+      margin: 15px auto;
+      padding: 18px;
+      border-radius: 16px;
+      max-width: 650px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    body.dark .audio-box {
+      background: #1e1e1e;
+      box-shadow: 0 4px 20px rgba(255,255,255,0.05);
+    }
+
+    .audio-box:hover {
+      transform: translateY(-2px);
+    }
+
+    .audio-title {
+      font-size: 18px;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    button.action-btn {
       padding: 8px 14px;
+      margin-top: 10px;
+      margin-right: 6px;
+      font-size: 14px;
+      border: none;
       border-radius: 8px;
+      cursor: pointer;
+      background: #ececec;
+      transition: background 0.3s;
+    }
+
+    body.dark button.action-btn {
+      background: #333;
+      color: #eee;
+    }
+
+    button.action-btn:hover {
+      background: #dcdcdc;
+    }
+
+    body.dark button.action-btn:hover {
+      background: #444;
     }
   </style>
 </head>
+
 <body>
 
   <!-- Dark Mode Button -->
   <button id="themeToggle">🌙</button>
 
   <h1>Audio Sammlung 🎧</h1>
-  <p>Hier kannst du alle Audiodateien anhören und herunterladen.</p>
+  <p style="text-align:center;">Hier kannst du alle Audiodateien anhören und herunterladen.</p>
 
-  <!-- Sesler buraya JS ile eklenecek -->
   <div id="audioList"></div>
 
   <script>
-    // Dark Mode Toggle
+    // Dark mode toggle
     const themeBtn = document.getElementById("themeToggle");
-    themeBtn.onclick = function() {
+    themeBtn.onclick = function () {
       document.body.classList.toggle("dark");
       themeBtn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
       localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
     };
 
-    window.onload = function() {
+    // Load theme + audios
+    window.onload = function () {
       if (localStorage.getItem("theme") === "dark") {
         document.body.classList.add("dark");
         themeBtn.textContent = "☀️";
@@ -76,7 +127,7 @@
       loadAudios();
     };
 
-    // Sesleri yükleme
+    // Load audio list
     function loadAudios() {
       fetch("audio/list.json")
         .then(res => res.json())
@@ -85,11 +136,14 @@
           files.forEach((name, i) => {
             html += `
               <div class="audio-box">
-                <h3>${name}</h3>
-                <audio id="audio${i}" controls src="audio/${name}"></audio><br>
-                <button onclick="rewind('audio${i}')">⟲ 10s zurück</button>
-                <button onclick="forward('audio${i}')">10s vor ⟳</button>
-                <a href="audio/${name}" download><button>⬇ Herunterladen</button></a>
+                <div class="audio-title">${name}</div>
+                <audio id="audio${i}" controls src="audio/${name}"></audio>
+                <br>
+                <button class="action-btn" onclick="rewind('audio${i}')">⟲ 10s</button>
+                <button class="action-btn" onclick="forward('audio${i}')">10s ⟳</button>
+                <a href="audio/${name}" download>
+                  <button class="action-btn">⬇ Download</button>
+                </a>
               </div>
             `;
           });
@@ -97,43 +151,13 @@
         });
     }
 
-    // 10 saniye geri
     function rewind(id) {
       document.getElementById(id).currentTime -= 10;
     }
 
-    // 10 saniye ileri
     function forward(id) {
       document.getElementById(id).currentTime += 10;
     }
   </script>
-fetch("audio/list.json")
-  .then(res => res.json())
-  .then(files => {
-    let html = "";
-    files.forEach((name, i) => {
-      html += `
-        <div class="audio-box">
-          <h3>${name}</h3>
-          <audio id="audio${i}" controls src="audio/${name}"></audio><br>
-          <button onclick="rewind('audio${i}')">⟲ 10s zurück</button>
-          <button onclick="forward('audio${i}')">10s vor ⟳</button>
-          <a href="audio/${name}" download><button>⬇ Herunterladen</button></a>
-        </div>
-      `;
-    });
-    document.getElementById("audioList").innerHTML = html;
-  });
-
-// 10 saniye geri/ileri fonksiyonları
-function rewind(id) {
-  document.getElementById(id).currentTime -= 10;
-}
-function forward(id) {
-  document.getElementById(id).currentTime += 10;
-}
-</script>
-
 </body>
 </html>
-
